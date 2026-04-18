@@ -29,6 +29,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var currentPath = window.location.pathname;
         var links = placeholder.querySelectorAll('a[href]');
         
+        // Extract the base path (e.g., "/Portfolio_2_Mock/" or "/")
+        var pathParts = currentPath.split('/').filter(function(p) { return p; });
+        var basePath = '';
+        
+        // If we're in a subdirectory like Portfolio_2_Mock, include it
+        if (pathParts.length > 0 && (currentPath.includes('Portfolio_2_Mock') || pathParts[0] !== 'index.html')) {
+          basePath = '/' + pathParts[0];
+        }
+        
         links.forEach(function (link) {
           var href = link.getAttribute('href');
           
@@ -37,9 +46,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
           }
 
+          // Convert absolute paths to include the base path
+          if (href.startsWith('/')) {
+            var newHref = basePath + href;
+            link.setAttribute('href', newHref);
+          }
+
           // Check if this is the current page
           var linkPath = link.pathname;
-          var isCurrent = currentPath.includes(href.replace(/^\//, ''));
+          var isCurrent = currentPath === linkPath || currentPath.includes(href.replace(/^\//, ''));
           
           if (isCurrent) {
             link.classList.add('active');
