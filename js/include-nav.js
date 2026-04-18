@@ -29,13 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
         var currentPath = window.location.pathname;
         var links = placeholder.querySelectorAll('a[href]');
         
-        // Extract the base path (e.g., "/Portfolio_2_Mock/" or "/")
-        var pathParts = currentPath.split('/').filter(function(p) { return p; });
+        // Detect if we're on GitHub Pages at /Portfolio_2_Mock/
         var basePath = '';
-        
-        // If we're in a subdirectory like Portfolio_2_Mock, include it
-        if (pathParts.length > 0 && (currentPath.includes('Portfolio_2_Mock') || pathParts[0] !== 'index.html')) {
-          basePath = '/' + pathParts[0];
+        if (currentPath.includes('/Portfolio_2_Mock/')) {
+          basePath = '/Portfolio_2_Mock';
         }
         
         links.forEach(function (link) {
@@ -46,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
           }
 
-          // Convert absolute paths to include the base path
+          // Convert absolute paths to include the base path if on GitHub Pages
           if (href.startsWith('/')) {
             var newHref = basePath + href;
             link.setAttribute('href', newHref);
