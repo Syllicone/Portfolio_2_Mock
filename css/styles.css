@@ -221,9 +221,8 @@
     .media-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 20px 60px;
-      width: 100%;
-      max-width: 1100px;
+      gap: 1% 5%;
+      max-width: 95%;
       grid-auto-flow: dense;
     }
 
