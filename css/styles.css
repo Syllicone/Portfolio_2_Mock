@@ -201,6 +201,12 @@
       overflow: hidden;
     }
 
+    .Pencilcase img {
+      max-width: 50%;
+      height: auto;
+      overflow: hidden;
+    }
+
     .Image-horizontal-small img {
       max-width: 50%;
       height: auto;
