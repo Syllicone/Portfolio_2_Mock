@@ -198,11 +198,13 @@
     .Image-horizontal img {
       max-width: 80%;
       height: auto;
+      overflow: hidden;
     }
 
     .Image-horizontal-small img {
       max-width: 50%;
       height: auto;
+      overflow: hidden;
     }
 
     .Image img {
