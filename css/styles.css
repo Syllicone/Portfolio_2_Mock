@@ -290,7 +290,7 @@
     }
 
     .entry.expanded .media-box {
-      width: 1100px;
+      width: 100%;
       flex-shrink: 0;
     }
 
