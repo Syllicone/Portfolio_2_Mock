@@ -186,6 +186,10 @@
       margin-top: 50px;
     }
 
+    .border {
+      border-bottom: #000000 1px solid;
+    }
+
     .Image {
       max-width: 400px;
       aspect-ratio: 3 / 4;
@@ -232,6 +236,7 @@
       gap: 1% 5%;
       max-width: 95%;
       grid-auto-flow: dense;
+      padding-bottom: 2%;
     }
 
     /* ENTRY LIST - SINGLE COLUMN */
@@ -258,6 +263,20 @@
       aspect-ratio: 4 / 3;
       overflow: hidden;
       cursor: pointer;
+    }
+
+    .media-box video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+    .media-text-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 2%;
+      width: 45%;
     }
 
     .media-box img {
