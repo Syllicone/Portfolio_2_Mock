@@ -30,6 +30,7 @@
     nav h1 a {
       text-decoration: none;
       color: inherit;
+  
     }
 
     /* NAV LINKS */
@@ -190,6 +191,11 @@
       border-bottom: #000000 1px solid;
     }
 
+    .border.extend {
+      border-bottom: #000000 1px solid;
+      padding-bottom: 10%;
+    }
+
     .Image {
       max-width: 400px;
       aspect-ratio: 3 / 4;
@@ -236,7 +242,7 @@
       gap: 1% 5%;
       max-width: 95%;
       grid-auto-flow: dense;
-      padding-bottom: 2%;
+      padding-bottom: 5%;
     }
 
     /* ENTRY LIST - SINGLE COLUMN */
@@ -322,6 +328,11 @@
       margin-top: 0;
     }
 
+    .filler {
+      width: 1000px;
+      height: 100%;
+      background-color: transparent;
+    }
   
 
 
