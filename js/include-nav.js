@@ -61,6 +61,62 @@ document.addEventListener('DOMContentLoaded', function () {
             if (window.innerWidth > 900) setOpen(false);
           });
         }
+
+        // Collapsible nav sections:
+        // - clicking .section-heading toggles the following <ul>
+        // - clicking .label toggles its nested <ul>
+        if (nav) {
+          var collapsibleTriggers = nav.querySelectorAll('span.section-heading, span.label');
+          var collapseId = 0;
+
+          function setupCollapsible(trigger, target) {
+            if (!target) return;
+            if (target.tagName !== 'UL') return;
+
+            var id = target.id;
+            if (!id) {
+              collapseId += 1;
+              id = 'nav-collapsible-' + collapseId;
+              target.id = id;
+            }
+
+            trigger.classList.add('nav-collapsible-trigger');
+            trigger.setAttribute('role', 'button');
+            trigger.setAttribute('tabindex', '0');
+            trigger.setAttribute('aria-controls', id);
+
+            // Default state: expanded
+            trigger.setAttribute('aria-expanded', 'true');
+
+            function setExpanded(isExpanded) {
+              trigger.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+              target.hidden = !isExpanded;
+            }
+
+            trigger.addEventListener('click', function () {
+              var expanded = trigger.getAttribute('aria-expanded') === 'true';
+              setExpanded(!expanded);
+            });
+
+            trigger.addEventListener('keydown', function (e) {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                var expanded = trigger.getAttribute('aria-expanded') === 'true';
+                setExpanded(!expanded);
+              }
+            });
+          }
+
+          collapsibleTriggers.forEach(function (trigger) {
+            var target = null;
+            if (trigger.classList.contains('section-heading')) {
+              target = trigger.nextElementSibling;
+            } else if (trigger.classList.contains('label')) {
+              target = trigger.nextElementSibling;
+            }
+            setupCollapsible(trigger, target);
+          });
+        }
         
         // Detect if we're on GitHub Pages at /Portfolio_2_Mock/
         var basePath = '';
