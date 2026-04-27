@@ -28,6 +28,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentPath = window.location.pathname;
         var links = placeholder.querySelectorAll('a[href]');
+
+        // Mobile burger menu behavior (nav.html is injected dynamically)
+        var nav = placeholder.querySelector('nav');
+        var toggle = placeholder.querySelector('.nav-toggle');
+        if (nav && toggle) {
+          function setOpen(isOpen) {
+            nav.classList.toggle('nav-open', isOpen);
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          }
+
+          toggle.addEventListener('click', function () {
+            var isOpen = nav.classList.contains('nav-open');
+            setOpen(!isOpen);
+          });
+
+          // Close on Esc
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') setOpen(false);
+          });
+
+          // Close after tapping a link (helps on phones)
+          nav.addEventListener('click', function (e) {
+            var target = e.target;
+            if (target && target.closest && target.closest('a[href]')) {
+              setOpen(false);
+            }
+          });
+
+          // If resized back to desktop, ensure menu is not "stuck" hidden
+          window.addEventListener('resize', function () {
+            if (window.innerWidth > 900) setOpen(false);
+          });
+        }
         
         // Detect if we're on GitHub Pages at /Portfolio_2_Mock/
         var basePath = '';
