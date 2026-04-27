@@ -80,6 +80,11 @@
       padding-left: 2px;
       font-weight: bold;
     }
+
+    /* Collapsed section / folder: slight gray so it’s obvious content is hidden */
+    nav .nav-collapsible-trigger[aria-expanded="false"] {
+      color: #777;
+    }
    
     li {
     position: relative;
