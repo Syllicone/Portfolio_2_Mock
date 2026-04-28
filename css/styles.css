@@ -239,6 +239,10 @@
       overflow: hidden;
     }
 
+    .noclick {
+      pointer-events: none;
+    }
+
     .Image-horizontal-small img {
       max-width: 50%;
       height: auto;
