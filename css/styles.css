@@ -110,6 +110,11 @@
       align-items: center;
     }
 
+    .year {
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
     main h2 {
       font-size: 13px;
       font-weight: bold;
