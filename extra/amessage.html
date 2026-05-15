@@ -121,7 +121,7 @@
       <div id="status-line"></div>
     </div>
 
-    <!-- MESSAGE -->
+    <!-- MESSAGE (revealed on correct password) -->
     <div id="message-wrapper">
       <div class="projects-container">
         <p class="about-heading">A Message</p>
@@ -133,11 +133,28 @@
   <script src="../js/include-nav.js"></script>
   <script src="../js/effects.js"></script>
   <script>
+    // ─────────────────────────────────────────────────────────────
+    // HOW TO SET UP
+    //
+    // 1. For EACH password, run encryptMessage() in your browser console:
+    //      encryptMessage('password1', 'Your message here...');
+    //      encryptMessage('password2', 'Your message here...');
+    //    (The message must be identical each time.)
+    //
+    // 2. Paste each resulting { iv, data } object into the STORED array below.
+    //
+    // 3. Replace HINT with your hint text.
+    //
+    // 4. Delete (or comment out) the encryptMessage helper once done.
+    // ─────────────────────────────────────────────────────────────
 
+    // Add one { iv, data } entry per password — all encrypting the same message.
+    const STORED = [
+    {"iv":"eGMumCdNsbavI2T/","data":"/a7yG3no5JFF+XYfR39HSC7qDdE/jh1RwaaWiIGsft/Pd7NXnVXz+809YPhWD8MvvOL0T2WlBcSH9+hsAN9HdXFa8BUwuWxwu/cxFQ=="},
+    {"iv":"pY8eX0CiHcjiB2hB","data":"o7tP0pKOK+X+C4AnZPfBs7LqMZyByatHtqtcaKWuyna/oC5UJ5AVJw8mJSEluqJ8PgWq1qi/UpnS0EH8NUTrVSbdN+K6nGA/ROaV/g=="},
+    ];
 
-    const STORED = {"iv":"g5gqLXlGd/4neBcm","data":"LWtj+BpfMF7BQNjeZDjIzSlv1EKTpZlMHRhFVfhGox2BZNO2V8JO4mCNvJXx2C+Bvk0bwqcgHa89rAlAkgiUfgbLNpueWXZa6p2X+w=="}
-
-    const HINT = 'A gentleman carrot with a case, no caps';
+    const HINT = 'A gentleman carrot with a case, no caps'; // set your hint text here
 
     // ── Crypto helpers ──────────────────────────────────────────
 
@@ -165,6 +182,9 @@
       return new TextDecoder().decode(plain);
     }
 
+    // ── Run this ONCE in the console to generate your ciphertext ──
+    // encryptMessage('yourpassword', 'Your message here...');
+
     async function encryptMessage(password, message) {
       const enc = new TextEncoder();
       const key = await deriveKey(password);
@@ -176,7 +196,7 @@
         iv:   btoa(String.fromCharCode(...iv)),
         data: btoa(String.fromCharCode(...new Uint8Array(encrypted)))
       };
-      console.log('Paste this into STORED:\n', JSON.stringify(result));
+      console.log('Paste this into STORED array:\n', JSON.stringify(result));
       return result;
     }
 
@@ -219,7 +239,7 @@
     }
 
     async function attempt() {
-      if (!STORED) {
+      if (!STORED || STORED.length === 0) {
         showError('Setup incomplete — no ciphertext stored');
         return;
       }
@@ -227,16 +247,22 @@
       const pwd = document.getElementById('pwd-input').value;
       if (!pwd) return;
 
-      try {
-        const message = await decrypt(STORED, pwd);
-        document.getElementById('login-wrapper').style.display = 'none';
-        document.getElementById('message-wrapper').style.display = 'block';
-        document.getElementById('msg-body').textContent = message;
-      } catch {
-        showError('Incorrect password');
-        document.getElementById('pwd-input').value = '';
-        document.getElementById('pwd-input').focus();
+      for (const entry of STORED) {
+        try {
+          const message = await decrypt(entry, pwd);
+          document.getElementById('login-wrapper').style.display = 'none';
+          document.getElementById('message-wrapper').style.display = 'block';
+          document.getElementById('msg-body').textContent = message;
+          return; // success — stop trying
+        } catch {
+          // this entry didn't match — try the next one
+        }
       }
+
+      // none of the entries decrypted successfully
+      showError('Incorrect password');
+      document.getElementById('pwd-input').value = '';
+      document.getElementById('pwd-input').focus();
     }
   </script>
 </body>
