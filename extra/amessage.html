@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/styles.css">
+  <title>A Message</title>
+  <style>
+
+    #login-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 25%;
+      gap: 12px;
+      width: 100%;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+
+    .password-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: Consolas, monospace;
+      font-size: 15px;
+    }
+
+    .password-row label {
+      white-space: nowrap;
+    }
+
+    #pwd-input {
+      font-family: Consolas, monospace;
+      font-size: 15px;
+      padding: 2px 4px;
+      border: 1px solid #999;
+      outline: none;
+      width: 280px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .terminal-btn {
+      background: #c0c0c0;
+      border-top: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-right: 1px solid #808080;
+      border-bottom: 1px solid #808080;
+      font-family: Consolas, monospace;
+      font-size: 15px;
+      padding: 2px 16px;
+      cursor: pointer;
+      color: #000;
+      min-width: 70px;
+    }
+
+    .terminal-btn:active {
+      border-top: 1px solid #808080;
+      border-left: 1px solid #808080;
+      border-right: 1px solid #ffffff;
+      border-bottom: 1px solid #ffffff;
+    }
+
+    #hint-window {
+      display: none;
+      border: 1px solid #999;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+      padding: 8px 14px;
+      color: #333;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    #hint-window::before {
+      content: 'hint: ';
+      color: #999;
+    }
+
+    #status-line {
+      font-size: 13px;
+      min-height: 18px;
+      text-align: center;
+      transition: opacity 1s ease;
+    }
+
+    #status-line.error {
+      color: #c00;
+    }
+
+    #status-line.fade {
+      opacity: 0;
+    }
+
+    #message-wrapper {
+      display: none;
+      width: 100%;
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <main>
+    <!-- LOGIN -->
+    <div id="login-wrapper">
+      <div class="password-row">
+        <label for="pwd-input">Password:</label>
+        <input type="password" id="pwd-input" autocomplete="off" autofocus spellcheck="false">
+      </div>
+      <div class="btn-row">
+        <button class="terminal-btn" onclick="attempt()">Enter</button>
+        <button class="terminal-btn" onclick="toggleHint()">Hint</button>
+      </div>
+      <div id="hint-window"></div>
+      <div id="status-line"></div>
+    </div>
+
+    <!-- MESSAGE -->
+    <div id="message-wrapper">
+      <div class="projects-container">
+        <p class="about-heading">A Message</p>
+        <p class="about-text" id="msg-body"></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/include-nav.js"></script>
+  <script src="../js/effects.js"></script>
+  <script>
+
+
+    const STORED = {"iv":"g5gqLXlGd/4neBcm","data":"LWtj+BpfMF7BQNjeZDjIzSlv1EKTpZlMHRhFVfhGox2BZNO2V8JO4mCNvJXx2C+Bvk0bwqcgHa89rAlAkgiUfgbLNpueWXZa6p2X+w=="}
+
+    const HINT = 'A gentleman carrot, no caps';
+
+    // ── Crypto helpers ──────────────────────────────────────────
+
+    const SALT = 'ds-message-salt-v1';
+
+    async function deriveKey(password) {
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
+      );
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: enc.encode(SALT), iterations: 200000, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    }
+
+    async function decrypt(stored, password) {
+      const key = await deriveKey(password);
+      const iv   = Uint8Array.from(atob(stored.iv),   c => c.charCodeAt(0));
+      const data = Uint8Array.from(atob(stored.data), c => c.charCodeAt(0));
+      const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+      return new TextDecoder().decode(plain);
+    }
+
+    async function encryptMessage(password, message) {
+      const enc = new TextEncoder();
+      const key = await deriveKey(password);
+      const iv  = crypto.getRandomValues(new Uint8Array(12));
+      const encrypted = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv }, key, enc.encode(message)
+      );
+      const result = {
+        iv:   btoa(String.fromCharCode(...iv)),
+        data: btoa(String.fromCharCode(...new Uint8Array(encrypted)))
+      };
+      console.log('Paste this into STORED:\n', JSON.stringify(result));
+      return result;
+    }
+
+    // ── UI ───────────────────────────────────────────────────────
+
+    document.getElementById('pwd-input')
+      .addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+
+    let hintVisible = false;
+
+    function toggleHint() {
+      const h = document.getElementById('hint-window');
+      if (hintVisible) {
+        h.style.display = 'none';
+        hintVisible = false;
+      } else {
+        h.textContent = HINT;
+        h.style.display = 'block';
+        hintVisible = true;
+      }
+    }
+
+    let fadeTimer = null;
+
+    function showError(msg) {
+      const status = document.getElementById('status-line');
+      if (fadeTimer) clearTimeout(fadeTimer);
+      status.classList.remove('fade');
+      status.className = 'error';
+      status.style.opacity = '1';
+      status.textContent = msg;
+      fadeTimer = setTimeout(() => {
+        status.classList.add('fade');
+        fadeTimer = setTimeout(() => {
+          status.textContent = '';
+          status.className = '';
+          status.style.opacity = '1';
+        }, 1000);
+      }, 3000);
+    }
+
+    async function attempt() {
+      if (!STORED) {
+        showError('Setup incomplete — no ciphertext stored');
+        return;
+      }
+
+      const pwd = document.getElementById('pwd-input').value;
+      if (!pwd) return;
+
+      try {
+        const message = await decrypt(STORED, pwd);
+        document.getElementById('login-wrapper').style.display = 'none';
+        document.getElementById('message-wrapper').style.display = 'block';
+        document.getElementById('msg-body').textContent = message;
+      } catch {
+        showError('Incorrect password');
+        document.getElementById('pwd-input').value = '';
+        document.getElementById('pwd-input').focus();
+      }
+    }
+  </script>
+</body>
+</html>
