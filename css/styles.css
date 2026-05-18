@@ -213,6 +213,77 @@
       margin-top: 50px;
     }
 
+    .submission-form {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .submission-required-note {
+      margin-bottom: 4px;
+      color: #555;
+    }
+
+    .submission-required {
+      font-weight: bold;
+    }
+
+    .submission-label {
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    .submission-input,
+    .submission-textarea {
+      font: inherit;
+      width: 100%;
+      padding: 2px;
+      border: 1px solid #000;
+      background: transparent;
+      color: inherit;
+    }
+
+    .submission-textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    .submission-input:focus,
+    .submission-textarea:focus {
+      outline: 2px solid #000;
+      outline-offset: 1px;
+    }
+
+    .submission-button {
+      margin-top: 16px;
+      align-self: flex-start;
+      font: inherit;
+      padding: 8px 14px;
+      border: 1px solid #000;
+      background: transparent;
+      cursor: pointer;
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .submission-button:hover {
+      color: rgb(255, 255, 0);
+      background-color: black;
+    }
+
+    .submission-success {
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .submission-honeypot {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
     .border {
       border-bottom: #000000 1px solid;
     }

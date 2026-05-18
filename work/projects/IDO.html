@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../css/styles.css">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="25852fcc-0afc-49a4-88b4-5288a6349f19"></script>
+  <title>Inconsiderate Domestic Objects</title>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <main>
+    <div class="projects-container">
+        <p class="about-heading">Inconsiderate Domestic Objects</p>
+        <p class="work-date">2026 (WIP)</p>
+        <p class="about-text"> Inconsiderate Domestic Objects make us more considerate by using them. This series of tools encourage emotional reflection through friction. Highlighting the ways in which domestic technologies are optimised for functions rather than humanness. The project encourages more poetic modes of habitation, helping people recognise and expel mathematical efficiency from their pockets, countertops and bedside tables. The project aims to enable new emotional behaviours, and enrich our imaginations. 
+        </p>
+
+        <div class="media-text-box">
+            <p><br><br><br><br><b>MAKE A SUBMISSION:</b></p>
+            <p>Inconsiderate objects are simple, ask yourself: 
+                <br>
+                <br>
+                [1] How can I design this to not be efficient or convenient to use?
+                <br>
+                <br>
+                [2] What about the interaction can I change or add to this object?
+                <br>
+                <br>
+                [3] What distinctly human skill can I practice when I use this object?
+            </p>
+            <p><br><br>If you have something that fufills all of those questions, submit them below!</p>
+        </div>
+        <div class="entry-container">
+            <form
+              class="submission-form"
+              action="https://formsubmit.co/dsinc001@campus.goldsmiths.ac.uk"
+              method="POST"
+            >
+              <input type="hidden" name="_subject" value="IDO submission">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_next" value="https://www.danielsinclair.design/work/projects/IDO?submitted=true">
+              <input type="text" name="_gotcha" class="submission-honeypot" tabindex="-1" autocomplete="off">
+
+              <p id="submission-success" class="submission-success" hidden>Thank you — your proposal has been sent.</p>
+              <p class="submission-required-note">* indicates required field</p>
+
+              <label class="submission-label" for="submission-name">Name: <span class="submission-required" aria-hidden="true">*</span></label>
+              <input class="submission-input" type="text" id="submission-name" name="name" required autocomplete="name">
+
+              <label class="submission-label" for="submission-email">Email address: <span class="submission-required" aria-hidden="true">*</span></label>
+              <input class="submission-input" type="email" id="submission-email" name="email" required autocomplete="email">
+
+              <label class="submission-label" for="submission-subject">Subject: <span class="submission-required" aria-hidden="true">*</span></label>
+              <input class="submission-input" type="text" id="submission-subject" name="subject" required>
+
+              <label class="submission-label" for="submission-proposal">Inconsiderate Object Proposal: <span class="submission-required" aria-hidden="true">*</span></label>
+              <textarea class="submission-textarea" id="submission-proposal" name="proposal" rows="8" required></textarea>
+
+              <button class="submission-button" type="submit">Submit proposal</button>
+            </form>
+        </div>
+
+        <div class="media-text-box">
+            <p><br><br><b>What happens with submissions?</b></p>
+            <p>Once enough have been gathered and prototyped, a pitch will be for the objects to be funded, constructed, and exhibited.
+            </p>
+        </div>
+
+    </div>
+  </main>
+
+  <script src="../../js/include-nav.js"></script>
+  <script src="../../js/effects.js"></script>
+  <script src="../../js/analytics.js"></script>
+  <script>
+    if (new URLSearchParams(window.location.search).get('submitted') === 'true') {
+      const message = document.getElementById('submission-success');
+      if (message) message.hidden = false;
+    }
+  </script>
+</body>
+</html>
